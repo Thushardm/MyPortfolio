@@ -51,43 +51,14 @@ const Contact: React.FC = () => {
     return undefined;
   };
 
-  const validateField = (name: string, value: string): string | undefined => {
-    switch (name) {
-      case 'name':
-        if (!value.trim()) return 'Name is required';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters long';
-        if (value.trim().length > 100) return 'Name must be less than 100 characters';
-        return undefined;
-      
-      case 'email':
-        return validateEmail(value);
-      
-      case 'subject':
-        if (!value.trim()) return 'Subject is required';
-        if (value.trim().length < 5) return 'Subject must be at least 5 characters long';
-        if (value.trim().length > 200) return 'Subject must be less than 200 characters';
-        return undefined;
-      
-      case 'message':
-        if (!value.trim()) return 'Message is required';
-        if (value.trim().length < 10) return 'Message must be at least 10 characters long';
-        if (value.trim().length > 2000) return 'Message must be less than 2000 characters';
-        return undefined;
-      
-      default:
-        return undefined;
-    }
-  };
-
   const validateForm = (): ValidationErrors => {
     const errors: ValidationErrors = {};
     
-    Object.entries(formData).forEach(([fieldName, value]) => {
-      const error = validateField(fieldName, value);
-      if (error) {
-        errors[fieldName as keyof FormData] = error;
-      }
-    });
+    // Only validate email field
+    const emailError = validateEmail(formData.email);
+    if (emailError) {
+      errors.email = emailError;
+    }
     
     return errors;
   };
@@ -120,12 +91,15 @@ const Contact: React.FC = () => {
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    const error = validateField(name, value);
     
-    setValidationErrors(prev => ({
-      ...prev,
-      [name]: error
-    }));
+    // Only validate email field on blur
+    if (name === 'email') {
+      const error = validateEmail(value);
+      setValidationErrors(prev => ({
+        ...prev,
+        email: error
+      }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -253,17 +227,9 @@ const Contact: React.FC = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  onBlur={handleBlur}
                   required
                   placeholder="Enter your full name"
-                  className={validationErrors.name ? 'error' : ''}
                 />
-                {validationErrors.name && (
-                  <div className="validation-error">
-                    <i className="fas fa-exclamation-circle"></i>
-                    {validationErrors.name}
-                  </div>
-                )}
               </div>
               
               <div className="form-group">
@@ -295,17 +261,9 @@ const Contact: React.FC = () => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  onBlur={handleBlur}
                   required
                   placeholder="What is this about?"
-                  className={validationErrors.subject ? 'error' : ''}
                 />
-                {validationErrors.subject && (
-                  <div className="validation-error">
-                    <i className="fas fa-exclamation-circle"></i>
-                    {validationErrors.subject}
-                  </div>
-                )}
               </div>
               
               <div className="form-group">
@@ -315,18 +273,10 @@ const Contact: React.FC = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  onBlur={handleBlur}
                   required
                   rows={5}
                   placeholder="Tell me more about your project, collaboration idea, or just say hello!"
-                  className={validationErrors.message ? 'error' : ''}
                 />
-                {validationErrors.message && (
-                  <div className="validation-error">
-                    <i className="fas fa-exclamation-circle"></i>
-                    {validationErrors.message}
-                  </div>
-                )}
               </div>
               
               <button
