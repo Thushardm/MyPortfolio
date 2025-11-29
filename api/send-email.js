@@ -1,5 +1,3 @@
-const emailjs = require('emailjs-com');
-
 export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
@@ -41,9 +39,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Initialize EmailJS
-    emailjs.init(EMAILJS_PUBLIC_KEY);
-
     // Prepare template parameters
     const templateParams = {
       to_name: 'Thushar D M',
@@ -54,15 +49,26 @@ export default async function handler(req, res) {
       reply_to: email,
     };
 
-    // Send email via EmailJS
-    const result = await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      templateParams,
-      EMAILJS_PUBLIC_KEY
-    );
+    // Send email via EmailJS REST API (server-side compatible)
+    const emailJSResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        template_params: templateParams,
+      }),
+    });
 
-    console.log('Email sent successfully:', result.text);
+    if (!emailJSResponse.ok) {
+      const errorText = await emailJSResponse.text();
+      throw new Error(`EmailJS API error: ${emailJSResponse.status} - ${errorText}`);
+    }
+
+    console.log('Email sent successfully via EmailJS API');
 
     // Return success response
     return res.status(200).json({ 
