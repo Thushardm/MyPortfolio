@@ -9,6 +9,13 @@ interface FormData {
   message: string;
 }
 
+interface ValidationErrors {
+  name?: string;
+  email?: string;
+  subject?: string;
+  message?: string;
+}
+
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -16,24 +23,121 @@ const Contact: React.FC = () => {
     subject: '',
     message: ''
   });
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // EmailJS Configuration from environment variables
-  const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID;
-  const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID;
-  const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY;
+  const EMAILJS_SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+  const EMAILJS_TEMPLATE_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+  const EMAILJS_PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+
+  // Validation functions
+  const validateEmail = (email: string): string | undefined => {
+    if (!email) {
+      return 'Email is required';
+    }
+    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address (e.g., john@example.com)';
+    }
+    
+    if (email.length > 254) {
+      return 'Email address is too long (maximum 254 characters)';
+    }
+    
+    return undefined;
+  };
+
+  const validateField = (name: string, value: string): string | undefined => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Name is required';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters long';
+        if (value.trim().length > 100) return 'Name must be less than 100 characters';
+        return undefined;
+      
+      case 'email':
+        return validateEmail(value);
+      
+      case 'subject':
+        if (!value.trim()) return 'Subject is required';
+        if (value.trim().length < 5) return 'Subject must be at least 5 characters long';
+        if (value.trim().length > 200) return 'Subject must be less than 200 characters';
+        return undefined;
+      
+      case 'message':
+        if (!value.trim()) return 'Message is required';
+        if (value.trim().length < 10) return 'Message must be at least 10 characters long';
+        if (value.trim().length > 2000) return 'Message must be less than 2000 characters';
+        return undefined;
+      
+      default:
+        return undefined;
+    }
+  };
+
+  const validateForm = (): ValidationErrors => {
+    const errors: ValidationErrors = {};
+    
+    Object.entries(formData).forEach(([fieldName, value]) => {
+      const error = validateField(fieldName, value);
+      if (error) {
+        errors[fieldName as keyof FormData] = error;
+      }
+    });
+    
+    return errors;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+
+    // Clear validation error for this field when user starts typing
+    if (validationErrors[name as keyof ValidationErrors]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: undefined
+      }));
+    }
+
+    // Real-time validation for email field
+    if (name === 'email' && value) {
+      const emailError = validateEmail(value);
+      setValidationErrors(prev => ({
+        ...prev,
+        email: emailError
+      }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    
+    setValidationErrors(prev => ({
+      ...prev,
+      [name]: error
     }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Validate form before submission
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setSubmitStatus('error');
+      return;
+    }
 
     // Check if EmailJS is properly configured
     if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
@@ -44,6 +148,7 @@ const Contact: React.FC = () => {
 
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    setValidationErrors({});
 
     try {
       // Initialize EmailJS with your public key
@@ -148,9 +253,17 @@ const Contact: React.FC = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                   required
                   placeholder="Enter your full name"
+                  className={validationErrors.name ? 'error' : ''}
                 />
+                {validationErrors.name && (
+                  <div className="validation-error">
+                    <i className="fas fa-exclamation-circle"></i>
+                    {validationErrors.name}
+                  </div>
+                )}
               </div>
               
               <div className="form-group">
@@ -161,9 +274,17 @@ const Contact: React.FC = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                   required
                   placeholder="Enter your email address"
+                  className={validationErrors.email ? 'error' : ''}
                 />
+                {validationErrors.email && (
+                  <div className="validation-error">
+                    <i className="fas fa-exclamation-circle"></i>
+                    {validationErrors.email}
+                  </div>
+                )}
               </div>
               
               <div className="form-group">
@@ -174,9 +295,17 @@ const Contact: React.FC = () => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                   required
                   placeholder="What is this about?"
+                  className={validationErrors.subject ? 'error' : ''}
                 />
+                {validationErrors.subject && (
+                  <div className="validation-error">
+                    <i className="fas fa-exclamation-circle"></i>
+                    {validationErrors.subject}
+                  </div>
+                )}
               </div>
               
               <div className="form-group">
@@ -186,10 +315,18 @@ const Contact: React.FC = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                   required
                   rows={5}
                   placeholder="Tell me more about your project, collaboration idea, or just say hello!"
+                  className={validationErrors.message ? 'error' : ''}
                 />
+                {validationErrors.message && (
+                  <div className="validation-error">
+                    <i className="fas fa-exclamation-circle"></i>
+                    {validationErrors.message}
+                  </div>
+                )}
               </div>
               
               <button
