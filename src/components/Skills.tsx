@@ -28,7 +28,7 @@ const Skills: React.FC = () => {
     {
       title: "Programming Languages",
       icon: "fas fa-code",
-      skills: ["C", "C++", "Java", "Python", "JavaScript", "TypeScript"]
+      skills: ["C", "Java", "Python", "JavaScript", "TypeScript"]
     },
     {
       title: "Web Technologies",

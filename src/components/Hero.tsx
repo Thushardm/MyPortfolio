@@ -25,12 +25,15 @@ const Hero: React.FC = () => {
             that save thousands of engineering hours.
           </p>
           <div className="hero-buttons">
-            <button 
-              className="btn btn-primary" 
-              onClick={() => scrollToSection('contact')}
+            <a 
+              href="https://drive.google.com/file/d/1sB7ltWGY_lQYf3oBbkGmAbzlFitVJhZ1/view?usp=sharing" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn btn-primary"
             >
-              Get In Touch
-            </button>
+              <i className="fas fa-file-pdf"></i>
+              View Resume
+            </a>
             <button 
               className="btn btn-secondary" 
               onClick={() => scrollToSection('projects')}

@@ -40,25 +40,25 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, technolog
 const Projects: React.FC = () => {
   const projects = [
     {
-      title: "Music Player Application",
-      role: "Backend Developer and Database Administrator",
-      description: "Developed a desktop music player using C# and MySQL for playlist and song management. Deployed locally on a MAMP server for smooth operation and testing with comprehensive database design.",
-      technologies: ["C#", "MySQL", "MAMP", "Desktop App", "Database Design"],
-      githubLink: "https://github.com/Thushardm"
+      title: "Beat Studio",
+      role: "Full-Stack Developer, Database Administrator",
+      description: "Developed comprehensive desktop music application using C# .NET Framework and MySQL database with advanced playlist management, album organization, and dynamic track metadata handling. Implemented Data Access Object (DAO) pattern for efficient CRUD operations.",
+      technologies: ["C#", ".NET Framework", "MySQL", "Windows Forms", "DAO Pattern", "HTTP Client"],
+      githubLink: "https://github.com/Thushardm/BeatStudio.git"
     },
     {
-      title: "Emotion Detection & Sentiment Analysis System",
-      role: "Backend Developer",
-      description: "Built an advanced ML model using Logistic Regression and NLP techniques to classify text into emotions with ~90% accuracy. Features real-time prediction API for instant sentiment inference.",
-      technologies: ["Python", "Scikit-learn", "NLP", "Flask", "Logistic Regression", "API"],
-      githubLink: "https://github.com/Thushardm"
+      title: "EmotionLens",
+      role: "Machine Learning Engineer, Backend Developer",
+      description: "Engineered machine learning pipeline using Logistic Regression and TF-IDF vectorization for multi-class emotion classification with comprehensive NLTK-based text preprocessing. Deployed Flask-based REST API for real-time sentiment prediction and emotion analysis.",
+      technologies: ["Python", "Scikit-learn", "NLTK", "Flask", "TF-IDF", "Logistic Regression", "REST API"],
+      githubLink: "https://github.com/Thushardm/EmotionLens.git"
     },
     {
-      title: "Media Authenticator and Fake Content Detector",
-      role: "Backend Developer",
-      description: "Designed a sophisticated CNN-based model to detect fraudulent images and videos for digital media authentication. Helps combat deepfakes and manipulated content using advanced computer vision techniques.",
-      technologies: ["Python", "TensorFlow", "CNN", "Computer Vision", "Deep Learning", "Image Processing"],
-      githubLink: "https://github.com/Thushardm"
+      title: "VerityLens",
+      role: "AI/ML Engineer, Full-Stack Developer",
+      description: "Developed full-stack web application using Flask and TensorFlow for deepfake detection in images and videos, implementing dual CNN architecture with Xception model for images and CNN-LSTM hybrid for temporal video analysis. Integrated blockchain technology using Ethereum smart contracts for immutable detection logging.",
+      technologies: ["Python", "TensorFlow", "Flask", "CNN-LSTM", "Xception", "Blockchain", "Ethereum", "Docker"],
+      githubLink: "https://github.com/Thushardm/VerityLens.git"
     }
   ];
 
