@@ -103,7 +103,6 @@ const Projects: React.FC = () => {
               technologies={project.technologies}
               githubLink={project.githubLink}
               liveLink={project.liveLink}
-              githubLink={project.githubLink}
             />
           ))}
         </div>
