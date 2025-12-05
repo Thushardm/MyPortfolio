@@ -59,9 +59,22 @@
   margin-left: 1rem;
 }
 
+.project-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .project-link:hover {
   color: #764ba2;
   transform: scale(1.2);
+}
+
+.live-link {
+  color: #28a745 !important;
+}
+
+.live-link:hover {
+  color: #218838 !important;
 }
 
 .project-role {

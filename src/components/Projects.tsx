@@ -6,23 +6,37 @@ interface ProjectCardProps {
   description: string;
   technologies: string[];
   githubLink: string;
+  liveLink?: string;
   role: string;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, technologies, githubLink, role }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, technologies, githubLink, liveLink, role }) => {
   return (
     <div className="project-card">
       <div className="project-header">
         <h3 className="project-title">{title}</h3>
-        <a 
-          href={githubLink} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="project-link"
-          aria-label={`View ${title} on GitHub`}
-        >
-          <i className="fab fa-github"></i>
-        </a>
+        <div className="project-links">
+          <a 
+            href={githubLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="project-link"
+            aria-label={`View ${title} on GitHub`}
+          >
+            <i className="fab fa-github"></i>
+          </a>
+          {liveLink && (
+            <a 
+              href={liveLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="project-link live-link"
+              aria-label={`View ${title} live demo`}
+            >
+              <i className="fas fa-external-link-alt"></i>
+            </a>
+          )}
+        </div>
       </div>
       <div className="project-role">
         <span>{role}</span>
@@ -49,9 +63,10 @@ const Projects: React.FC = () => {
     {
       title: "EmotionLens",
       role: "Machine Learning Engineer, Backend Developer",
-      description: "Engineered machine learning pipeline using Logistic Regression and TF-IDF vectorization for multi-class emotion classification with comprehensive NLTK-based text preprocessing. Deployed Flask-based REST API for real-time sentiment prediction and emotion analysis.",
-      technologies: ["Python", "Scikit-learn", "NLTK", "Flask", "TF-IDF", "Logistic Regression", "REST API"],
-      githubLink: "https://github.com/Thushardm/EmotionLens.git"
+      description: "Engineered machine learning pipeline using Logistic Regression and TF-IDF vectorization for multi-class emotion classification with comprehensive NLTK-based text preprocessing. Deployed Flask-based REST API for real-time sentiment prediction and emotion analysis with interactive web interface.",
+      technologies: ["Python", "Scikit-learn", "NLTK", "Flask", "TF-IDF", "Logistic Regression", "REST API", "Railway"],
+      githubLink: "https://github.com/Thushardm/EmotionLens.git",
+      liveLink: "https://emotion-lens-prod.up.railway.app"
     },
     {
       title: "VerityLens",
@@ -78,6 +93,8 @@ const Projects: React.FC = () => {
               role={project.role}
               description={project.description}
               technologies={project.technologies}
+              githubLink={project.githubLink}
+              liveLink={project.liveLink}
               githubLink={project.githubLink}
             />
           ))}
