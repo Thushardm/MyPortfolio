@@ -11,8 +11,14 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, technologies, githubLink, liveLink, role }) => {
+  const handleCardClick = () => {
+    if (liveLink) {
+      window.open(liveLink, '_blank');
+    }
+  };
+
   return (
-    <div className="project-card">
+    <div className={`project-card ${liveLink ? 'clickable' : ''}`} onClick={handleCardClick}>
       <div className="project-header">
         <h3 className="project-title">{title}</h3>
         <div className="project-links">
@@ -22,6 +28,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, technolog
             rel="noopener noreferrer"
             className="project-link"
             aria-label={`View ${title} on GitHub`}
+            onClick={(e) => e.stopPropagation()}
           >
             <i className="fab fa-github"></i>
           </a>
@@ -32,6 +39,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, technolog
               rel="noopener noreferrer"
               className="project-link live-link"
               aria-label={`View ${title} live demo`}
+              onClick={(e) => e.stopPropagation()}
             >
               <i className="fas fa-external-link-alt"></i>
             </a>
