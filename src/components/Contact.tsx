@@ -172,16 +172,6 @@ const Contact: React.FC = () => {
           <div className="contact-info">
             <div className="contact-item">
               <div className="contact-icon">
-                <i className="fas fa-envelope"></i>
-              </div>
-              <div className="contact-details">
-                <h4>Email</h4>
-                <a href="mailto:tushardm123@gmail.com">tushardm123@gmail.com</a>
-              </div>
-            </div>
-            
-            <div className="contact-item">
-              <div className="contact-icon">
                 <i className="fab fa-linkedin"></i>
               </div>
               <div className="contact-details">
