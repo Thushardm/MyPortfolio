@@ -182,16 +182,6 @@ const Contact: React.FC = () => {
             
             <div className="contact-item">
               <div className="contact-icon">
-                <i className="fas fa-phone"></i>
-              </div>
-              <div className="contact-details">
-                <h4>Phone</h4>
-                <a href="tel:+919964593390">+91 9964593390</a>
-              </div>
-            </div>
-            
-            <div className="contact-item">
-              <div className="contact-icon">
                 <i className="fab fa-linkedin"></i>
               </div>
               <div className="contact-details">
